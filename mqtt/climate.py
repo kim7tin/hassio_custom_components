@@ -291,7 +291,7 @@ class MqttClimate(
         self._current_swing_mode = None
         self._current_temp = None
         self._hold = None
-        self._target_temp = None
+        self._target_temp = 24
         self._target_temp_high = None
         self._target_temp_low = None
         self._topic = None
@@ -682,9 +682,9 @@ class MqttClimate(
             payload = "{{\"Vendor\":\"{}\",\"Power\":{},\"Mode\":\"{}\",\"FanSpeed\":\"{}\",\"Temp\":{}}}".format(
                 self._config[CONF_TASMOTA_HVAC_VENDOR], 
                 "0" if self._current_operation == HVAC_MODE_OFF else "1", 
-                HVAC_MODE_COOL if self._current_operation == HVAC_MODE_OFF else self._current_operation, 
-                FAN_AUTO, 
-                int(kwargs.get(ATTR_TEMPERATURE))
+                HVAC_MODE_COOL.capitalize() if self._current_operation == HVAC_MODE_OFF else self._current_operation.capitalize(), 
+                FAN_AUTO.capitalize(), 
+                kwargs.get(ATTR_TEMPERATURE)
             )
             setattr(self, "_target_temp", kwargs.get(ATTR_TEMPERATURE))
             self._publish(CONF_TEMP_COMMAND_TOPIC, payload)
@@ -739,14 +739,17 @@ class MqttClimate(
 
     async def async_set_hvac_mode(self, hvac_mode) -> None:
         if self._config[CONF_TASMOTA_HVAC_VENDOR] != "":
+            self._target_temp = self._target_temp if self._target_temp is not None else 24
             payload = "{{\"Vendor\":\"{}\",\"Power\":{},\"Mode\":\"{}\",\"FanSpeed\":\"{}\",\"Temp\":{}}}".format(
                 self._config[CONF_TASMOTA_HVAC_VENDOR], 
                 "0" if hvac_mode == HVAC_MODE_OFF else "1", 
-                HVAC_MODE_COOL if hvac_mode == HVAC_MODE_OFF else hvac_mode, 
-                FAN_AUTO, 
-                int(self._target_temp)
+                HVAC_MODE_COOL.capitalize() if hvac_mode == HVAC_MODE_OFF else hvac_mode.capitalize(), 
+                FAN_AUTO.capitalize(), 
+                self._target_temp
             )
             self._publish(CONF_TEMP_COMMAND_TOPIC, payload)
+            self._current_operation = hvac_mode
+            self.async_write_ha_state()
         else:
             """Set new operation mode."""
             if self._current_operation == HVAC_MODE_OFF and hvac_mode != HVAC_MODE_OFF:
