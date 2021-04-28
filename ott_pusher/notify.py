@@ -44,8 +44,16 @@ class OTTPusherNotificationService(BaseNotificationService):
 
         for key in kwargs[ATTR_TARGET]:
             try:
-                response = requests.get(
-                    'https://taymay.herokuapp.com/send/?key={}&message={}'.format(key, message))
+                if message.startswith('https://') or message.startswith('http://'):
+                    response = requests.get(
+                        'https://taymay.herokuapp.com/file/?key={}&url={}'.format(key, message))
+                elif message.startswith('/'):
+                    file = {'file': open(message, 'rb')}
+                    response = requests.post('https://taymay.herokuapp.com/file/?key={}'.format(key), files=file)
+                else:
+                    response = requests.get(
+                        'https://taymay.herokuapp.com/send/?key={}&message={}'.format(key, message))
+                    
             except requests.exceptions.Timeout:
                 _LOGGER.exception("Connection to the router timed out")
                 continue
