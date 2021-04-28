@@ -1,0 +1,8 @@
+{
+    "domain": "fbm_pusher",
+    "name": "FB Messenger Pusher",
+    "documentation": "https://hs2t.com",
+    "dependencies": [],
+    "codeowners": ["han"],
+    "requirements": []
+}
