@@ -1,0 +1,1 @@
+"""The Nano UPS component."""

@@ -1,0 +1,8 @@
+{
+    "domain": "ott_pusher",
+    "name": "OTT Pusher",
+    "documentation": "https://hs2t.com",
+    "codeowners": ["@han"],
+    "dependencies": [],
+    "requirements": []
+  }

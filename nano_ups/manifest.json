@@ -1,0 +1,7 @@
+{
+    "domain": "nano_ups",
+    "name": "Nano UPS",
+    "documentation": "https://hs2t.com",
+    "codeowners": ["@han"],
+    "requirements": ["pyserial-asyncio==0.5"]
+  }
