@@ -119,7 +119,7 @@ def _check_com_port(config):
     line = _uart_read_timeout(2)
     if line != b"OK":
         return False
-    serial.write(b"AT+CSCS="GSM"\r\n")
+    serial.write(b"AT+CSCS=\"GSM\"\r\n")
     line = _uart_read_timeout(2)
     if line != b"OK":
         return False    
