@@ -1,4 +1,5 @@
 """OTT Pusher platform for notify component."""
+from http import HTTPStatus
 import logging
 
 from homeassistant.components.notify import (
@@ -6,10 +7,7 @@ from homeassistant.components.notify import (
     PLATFORM_SCHEMA,
     BaseNotificationService
 )
-from homeassistant.const import (
-    CONF_RECIPIENT,
-    HTTP_OK
-)
+from homeassistant.const import CONF_RECIPIENT
 import homeassistant.helpers.config_validation as cv
 import requests
 import voluptuous as vol
@@ -57,7 +55,7 @@ class OTTPusherNotificationService(BaseNotificationService):
             except requests.exceptions.Timeout:
                 _LOGGER.exception("Connection to the router timed out")
                 continue
-            if response.status_code == HTTP_OK:
+            if response.status_code == HTTPStatus.OK:
                 _LOGGER.debug("Send message to:\r\n%s", key)
                 continue
             _LOGGER.error("Invalid response: %s", response)
